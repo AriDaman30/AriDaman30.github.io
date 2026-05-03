@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ari Daman Singh</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0b0c0f; --bg2: #111318; --bg3: #181a21; --card: #13151b;
+    --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.13);
+    --accent: #00e5a0; --accent2: #00b87a;
+    --accent-dim: rgba(0,229,160,0.08);
+    --text: #e8eaf0; --muted: #7a7f93; --muted2: #4e5368;
+    --mono: 'JetBrains Mono', monospace; --display: 'Syne', sans-serif;
+  }
+  body { background: var(--bg); color: var(--text); font-family: var(--mono); min-height: 100vh; overflow-x: hidden; }
+  .noise { position: fixed; inset: 0; pointer-events: none; z-index: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); opacity: 0.4; }
+  .grid-lines { position: fixed; inset: 0; pointer-events: none; z-index: 0; background-image: linear-gradient(rgba(0,229,160,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,160,0.025) 1px, transparent 1px); background-size: 48px 48px; }
+  .container { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 0 2rem 4rem; }
+  .hero { padding: 5rem 0 4rem; border-bottom: 1px solid var(--border); }
+  .hero-label { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); font-weight: 500; display: flex; align-items: center; gap: 8px; margin-bottom: 1.5rem; }
+  .hero-label::before { content: ''; display: block; width: 24px; height: 1px; background: var(--accent); }
+  .hero-name { font-family: var(--display); font-size: clamp(2.8rem, 6vw, 5rem); font-weight: 800; line-height: 1; letter-spacing: -0.02em; color: var(--text); margin-bottom: 0.5rem; }
+  .hero-name span { color: var(--accent); display: block; }
+  .hero-tagline { font-size: 13px; color: var(--muted); margin-top: 1.5rem; max-width: 480px; line-height: 1.8; }
+  .hero-tagline em { color: var(--accent); font-style: normal; }
+  .hero-meta { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 1.5rem; }
+  .meta-item { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+  .meta-item .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+  section { padding: 3.5rem 0; border-bottom: 1px solid var(--border); }
+  .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 2rem; }
+  .section-num { font-size: 11px; color: var(--accent); letter-spacing: 0.1em; }
+  .section-title { font-family: var(--display); font-size: 1.15rem; font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
+  .section-line { flex: 1; height: 1px; background: var(--border); }
+  .about-text { font-size: 13px; line-height: 2; color: var(--muted); max-width: 640px; }
+  .about-text strong { color: var(--text); font-weight: 500; }
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  .skill-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; position: relative; overflow: hidden; transition: border-color 0.2s, background 0.2s; }
+  .skill-card:hover { border-color: var(--border2); background: var(--bg3); }
+  .skill-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--accent); opacity: 0; transition: opacity 0.2s; }
+  .skill-card:hover::before { opacity: 1; }
+  .skill-name { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+  .skill-level { font-size: 11px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
+  .skill-bar-track { height: 3px; background: var(--border2); border-radius: 2px; overflow: hidden; }
+  .skill-bar-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--accent2), var(--accent)); }
+  .edu-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; display: flex; gap: 1.25rem; align-items: flex-start; }
+  .edu-icon { width: 40px; height: 40px; flex-shrink: 0; background: var(--accent-dim); border: 1px solid rgba(0,229,160,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .edu-degree { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+  .edu-school { font-size: 12px; color: var(--accent); margin-bottom: 4px; }
+  .edu-meta { font-size: 11px; color: var(--muted); display: flex; gap: 16px; flex-wrap: wrap; }
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+  .project-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; position: relative; overflow: hidden; transition: border-color 0.2s; }
+  .project-card:hover { border-color: rgba(0,229,160,0.3); }
+  .project-tag { display: inline-flex; align-items: center; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); border: 1px solid rgba(0,229,160,0.25); background: var(--accent-dim); padding: 2px 8px; border-radius: 4px; margin-bottom: 12px; }
+  .project-title { font-family: var(--display); font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+  .project-desc { font-size: 12px; line-height: 1.8; color: var(--muted); }
+  .project-stack { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; align-items: center; }
+  .stack-pill { font-size: 10px; color: var(--muted); background: var(--bg3); border: 1px solid var(--border); padding: 2px 8px; border-radius: 4px; }
+  .live-link { font-size: 10px; color: var(--accent); border: 1px solid rgba(0,229,160,0.3); padding: 2px 8px; border-radius: 4px; text-decoration: none; margin-left: auto; display: inline-flex; align-items: center; gap: 4px; transition: background 0.2s; }
+  .live-link:hover { background: var(--accent-dim); }
+  .live-link::before { content: '↗'; font-size: 11px; }
+  .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+  .contact-item { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; font-size: 12px; transition: border-color 0.2s, background 0.2s; text-decoration: none; display: block; }
+  .contact-item:hover { border-color: rgba(0,229,160,0.3); background: var(--bg3); }
+  .contact-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted2); margin-bottom: 4px; }
+  .contact-value { color: var(--accent); font-weight: 500; font-size: 13px; word-break: break-all; }
+  .footer { padding: 2rem 0 0; font-size: 11px; color: var(--muted2); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .blink { display: inline-block; width: 2px; height: 1em; background: var(--accent); margin-left: 4px; vertical-align: text-bottom; animation: blink 1s step-end infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  .hero { animation: fadeIn 0.5s ease forwards; }
+  section:nth-of-type(1) { animation: fadeIn 0.5s 0.1s ease both; }
+  section:nth-of-type(2) { animation: fadeIn 0.5s 0.2s ease both; }
+  section:nth-of-type(3) { animation: fadeIn 0.5s 0.3s ease both; }
+  section:nth-of-type(4) { animation: fadeIn 0.5s 0.4s ease both; }
+  section:nth-of-type(5) { animation: fadeIn 0.5s 0.5s ease both; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+</style>
+</head>
+<body>
+<div class="noise"></div>
+<div class="grid-lines"></div>
+<div class="container">
+
+  <div class="hero">
+    <div class="hero-label">Portfolio · 2025</div>
+    <h1 class="hero-name">Ari Daman<span>Singh</span></h1>
+    <p class="hero-tagline">
+      B.Tech student at <em>Galgotias College of Engineering and Technology</em> building a foundation in
+      algorithms, web development & backend engineering.
+      Currently mastering <em>DSA in C++</em> and exploring the Python ecosystem.
+    </p>
+    <div class="hero-meta">
+      <span class="meta-item"><span class="dot"></span>2nd Year · B.Tech CSE(DS)</span>
+      <span class="meta-item"><span class="dot"></span>Greater Noida, India</span>
+      <span class="meta-item"><span class="dot"></span>Open to Internships</span>
+    </div>
+  </div>
+
+  <section>
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">About</h2>
+      <div class="section-line"></div>
+    </div>
+    <p class="about-text">
+      I'm a <strong>2nd-year Computer Science student</strong> with a strong interest in
+      problem-solving and software development. I've built a solid foundation in
+      <strong>Data Structures & Algorithms</strong> using C++ and enjoy writing clean,
+      logical code. I'm currently expanding into web technologies and backend development
+      with <strong>Python & Django</strong>. I believe in learning by building — every
+      project is a step toward becoming a better engineer.
+    </p>
+  </section>
+
+  <section>
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Tech Stack</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <div class="skill-name">DSA · C++</div>
+        <div class="skill-level">Beginner → Mid</div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" style="width:50%"></div></div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-name">Python</div>
+        <div class="skill-level">Beginner → Mid</div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" style="width:50%"></div></div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-name">HTML & CSS</div>
+        <div class="skill-level">Beginner → Mid</div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" style="width:50%"></div></div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-name">Django</div>
+        <div class="skill-level">Learning Soon</div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" style="width:8%"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Education</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-icon">🎓</div>
+      <div>
+        <div class="edu-degree">Bachelor of Technology — Computer Science & Engineering (Data Science)</div>
+        <div class="edu-school">Galgotias College of Engineering and Technology</div>
+        <div class="edu-meta">
+          <span>Greater Noida, UP</span>
+          <span>2024 – 2028</span>
+          <span>2nd Year · Ongoing</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Projects</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="projects-grid">
+
+      <div class="project-card">
+        <div class="project-tag">Django · Backend</div>
+        <div class="project-title">Django Blog App</div>
+        <p class="project-desc">A beginner Django project with user authentication — register, login, and logout functionality. Logged-in users can create and publish blog posts. Built to learn Django's auth system, views, models, and URL routing.</p>
+        <div class="project-stack">
+          <span class="stack-pill">Python</span>
+          <span class="stack-pill">Django</span>
+          <span class="stack-pill">SQLite</span>
+          <span class="stack-pill">HTML</span>
+          <span class="stack-pill">CSS</span>
+          <a class="live-link" href="https://basic-django-blog-app.onrender.com/" target="_blank">Live Demo</a>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-tag">Web · HTML/CSS</div>
+        <div class="project-title">Personal Portfolio</div>
+        <p class="project-desc">A personal portfolio website designed and built from scratch to showcase skills, projects, and contact details. Built with semantic HTML and CSS with a focus on clean layout and responsive design.</p>
+        <div class="project-stack">
+          <span class="stack-pill">HTML</span>
+          <span class="stack-pill">CSS</span>
+        </div>
+      </div>
+
+      <div class="project-card">
+        <div class="project-tag">Web · HTML/CSS</div>
+        <div class="project-title">Online Bookstore</div>
+        <p class="project-desc">A static webpage for an online bookstore built using HTML and CSS. Features a book catalogue layout, category sections, and a styled UI simulating a real e-commerce book browsing experience.</p>
+        <div class="project-stack">
+          <span class="stack-pill">HTML</span>
+          <span class="stack-pill">CSS</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2 class="section-title">Contact</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="contact-grid">
+      <a class="contact-item" href="mailto:aridaman6668@gmail.com">
+        <div class="contact-label">Email</div>
+        <div class="contact-value">aridaman6668@gmail.com</div>
+      </a>
+      <a class="contact-item" href="tel:+916388711755">
+        <div class="contact-label">Phone</div>
+        <div class="contact-value">+91 63887 11755</div>
+      </a>
+      <a class="contact-item" href="https://www.linkedin.com/in/ari-daman-singh-b22b14323" target="_blank">
+        <div class="contact-label">LinkedIn</div>
+        <div class="contact-value">@ari-daman-singh</div>
+      </a>
+      <a class="contact-item" href="https://github.com/AriDaman30" target="_blank">
+        <div class="contact-label">GitHub</div>
+        <div class="contact-value">@AriDaman30</div>
+      </a>
+    </div>
+  </section>
+
+  <div class="footer">
+    <span>© 2025 Ari Daman Singh</span>
+    <span>B.Tech CSE(DS) · Galgotias GCET<span class="blink"></span></span>
+  </div>
+
+</div>
+</body>
+</html>
